@@ -2,17 +2,15 @@ import argparse
 import os
 import pprint
 import re
-import sys
 
 def make_args():
     args_parser = argparse.ArgumentParser(
         prog="bmp_rle.py",
-        description="Create a bitmap index from a list of strings")
+        description="Create a bitmap index from a list")
     args_parser.add_argument("data",
                             metavar="data",
-                            type=str,
                             nargs="?",
-                            help="The data to convert as a list")
+                            help="Input to convert in list format")
     args_parser.add_argument("-p",
                             "--pprint",
                             action="store_true",
@@ -81,22 +79,48 @@ def make_comp_bmp(col_lst):
 
 
 def run_test():
-    speed = [2.66, 2.10, 1.42, 2.80, 3.20, 3.20, 2.20, 2.20, 2.00, 2.80, 1.86, 2.80]
-    ram = [1024, 512, 512, 1024, 512, 1024, 1024, 2048, 1024, 2048, 2048, 1024]
-    hd = [250, 250, 80, 250, 250, 320, 200, 250, 250, 300, 160, 160]
+    raw = [2.66, 2.10, 1.42, 2.80, 3.20, 3.20,
+           2.20, 2.20, 2.00, 2.80, 1.86, 2.80]
+    ref_uncomp = ['100000000000',
+                  '010000000000',
+                  '001000000000',
+                  '000100000101',
+                  '000011000000',
+                  '000011000000',
+                  '000000110000',
+                  '000000110000',
+                  '000000001000',
+                  '000100000101',
+                  '000000000010',
+                  '000100000101']
+    ref_comp = ['00',
+                '01',
+                '1010',
+                '101111010101',
+                '11010000',
+                '11010000',
+                '11011000',
+                '11011000',
+                '11101000',
+                '101111010101',
+                '11101010',
+                '101111010101']
+    test_uncomp = make_bmp(raw)
+    test_comp = make_comp_bmp(test_uncomp)
 
-    actual = make_comp_bmp(["001000100010001", "000000011000101", "010000000100"])
-    desired = ["1010101110111011", "11011100101101", "01110111"]
-    for x, y in list(zip(actual, desired)):
-        print("Actual:  " + x)
-        print("Desired: " + y)
-        print("\n")
-    try:
-        assert desired == actual
-        print("INFO: Test passed!")
-
-    except AssertionError:
-        print("ERROR: Test failed!")
+    def results(test_inp, ref_inp):
+        for x, y in list(zip(test_inp, ref_inp)):
+            print("Input:  " + x)
+            print("Result: " + y)
+            print("\n")
+        try:
+            assert test_inp == ref_inp
+            print("INFO: Uncompressed test passed!\n")
+        except AssertionError:
+            print("ERROR: Uncompressed test failed!\n")
+    
+    results(test_uncomp, ref_uncomp)
+    results(test_comp, ref_comp)
 
 
 def return_raw(raw):
@@ -119,12 +143,14 @@ if __name__ == "__main__":
             pp.pprint(comp)
         else:
             print(return_raw(comp))
+        raise SystemExit
     if args.uncomp:
         if args.pprint:
             print("\nUncompressed:\n")
             pp.pprint(uncomp)
         else:
             print(return_raw(uncomp))
+        raise SystemExit
     else:
         if args.pprint:
             print("\nUncompressed:\n")
