@@ -32,6 +32,7 @@ def make_args():
     args = args_parser.parse_args()
     return args
 
+
 def make_bmp(column):
     column_bmp = []
     column_str = ""
@@ -96,6 +97,7 @@ def run_test():
 
     except AssertionError:
         print("ERROR: Test failed!")
+
 
 def return_raw(raw):
     return "".join("\n{}".format(x) for x in raw)
