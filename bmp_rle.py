@@ -74,6 +74,7 @@ def make_comp_bmp(col_lst):
                 len_num_zeros_bin = len(num_zeros_bin) - 1
                 tmp = (len_num_zeros_bin * "1") + "0" + num_zeros_bin
             buf = buf + tmp
+            buf = buf.rstrip("0")
         buf_list.append(buf)
     return buf_list
 
