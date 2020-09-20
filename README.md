@@ -4,6 +4,10 @@
 
 Created specifically for a course in which I had to create bitmaps from columns, and then compress them using a method described in the textbook. For the curious, it's "Database Systems: The Complete Book (2nd Edition)" ISBN-13: 978-0131873254, in Section 14.7.
 
+### WARNING:
+There is currently a fairly major bug when executing this from the command line; everything is padded and/or incorrect. The test functionality works fine, as does using the code from within IPython or Jupyter. Be ye warned.
+
+
 ### Usage: 
 Call the program using Python 2 or 3, with the data to be converted as a list within a string.
 
