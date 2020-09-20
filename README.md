@@ -9,6 +9,9 @@ Call the program using Python 2 or 3, with the data to be converted as a list wi
 
 ### Optional arguments:
 -u (--uncomp) or -c (--comp) to generate only the [un]compressed output.
+
 -p (--pprint) for pretty-printed output.
+
 -t (--test) for a test with known data.
+
 -h (--help) for an argparse helper.
