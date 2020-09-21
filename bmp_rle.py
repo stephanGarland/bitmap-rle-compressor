@@ -9,8 +9,9 @@ def make_args():
         description="Create a bitmap index from a list")
     args_parser.add_argument("data",
                             metavar="data",
-                            nargs="?",
-                            help="Input to convert in list format")
+                            nargs="*",
+                            type=float,
+                            help="Input to convert in space-separated values")
     args_parser.add_argument("-p",
                             "--pprint",
                             action="store_true",
@@ -74,7 +75,8 @@ def make_comp_bmp(col_lst):
                 len_num_zeros_bin = len(num_zeros_bin) - 1
                 tmp = (len_num_zeros_bin * "1") + "0" + num_zeros_bin
             buf = buf + tmp
-            buf = buf.rstrip("0")
+            if not buf == "00":
+                buf = buf.rstrip("0")
         buf_list.append(buf)
     return buf_list
 
@@ -96,29 +98,29 @@ def run_test():
                   '000100000101']
     ref_comp = ['00',
                 '01',
-                '1010',
+                '101',
                 '101111010101',
-                '11010000',
-                '11010000',
-                '11011000',
-                '11011000',
-                '11101000',
+                '1101',
+                '1101',
+                '11011',
+                '11011',
+                '11101',
                 '101111010101',
-                '11101010',
+                '1110101',
                 '101111010101']
     test_uncomp = make_bmp(raw)
     test_comp = make_comp_bmp(test_uncomp)
 
     def results(test_inp, ref_inp):
         for x, y in list(zip(test_inp, ref_inp)):
-            print("Input:  " + x)
-            print("Result: " + y)
+            print("Expected:  " + y)
+            print("Actual  :  " + x)
             print("\n")
         try:
             assert test_inp == ref_inp
-            print("INFO: Uncompressed test passed!\n")
+            print("INFO: Test passed!\n")
         except AssertionError:
-            print("ERROR: Uncompressed test failed!\n")
+            print("ERROR: Test failed!\n")
     
     results(test_uncomp, ref_uncomp)
     results(test_comp, ref_comp)
@@ -139,15 +141,15 @@ if __name__ == "__main__":
     uncomp = make_bmp(args.data)
     comp = make_comp_bmp(uncomp)
     if args.comp:
+        print("\nCompressed:\n")
         if args.pprint:
-            print("\nCompressed:\n")
             pp.pprint(comp)
         else:
             print(return_raw(comp))
         raise SystemExit
     if args.uncomp:
+        print("\nUncompressed:\n")
         if args.pprint:
-            print("\nUncompressed:\n")
             pp.pprint(uncomp)
         else:
             print(return_raw(uncomp))
@@ -159,5 +161,7 @@ if __name__ == "__main__":
             print("\nCompressed:\n")
             pp.pprint(comp)
         else:
+            print("\nUncompressed:\n")
             print(return_raw(uncomp))
+            print("\nCompressed:\n")
             print(return_raw(comp))
