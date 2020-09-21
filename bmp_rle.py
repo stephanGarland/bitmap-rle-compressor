@@ -31,7 +31,8 @@ def make_args():
     args = args_parser.parse_args()
     return args
 
-
+# Definitely not the most performant solution, but one that works
+# If the inner loop finds its value in the outer loop, mark it
 def make_bmp(column):
     column_bmp = []
     column_str = ""
@@ -49,7 +50,7 @@ def make_bmp(column):
 def dec_to_bin(n):
     return bin(n).replace("0b", "")
 
-
+# Captures groups of runs of 0s, demarcated with 1s
 def zero_regexer(uncompressed_input):
     regex = r"1|(0+1)"
     matches = re.finditer(regex, uncompressed_input, re.MULTILINE)
@@ -67,14 +68,20 @@ def make_comp_bmp(col_lst):
             group_list.append(match.group())
 
         for group in group_list:
+            # Edge case that must be manually caught
             if group == "1":
                 tmp = "00"
             else:
+                # Count the run length
                 num_zeros = group.count("0")
                 num_zeros_bin = dec_to_bin(num_zeros)
+                # The number of bits of the run length, in binary, less one for below
                 len_num_zeros_bin = len(num_zeros_bin) - 1
+                # Make the compressed string consisting of n * 1 + 0 + binary value
                 tmp = (len_num_zeros_bin * "1") + "0" + num_zeros_bin
             buf = buf + tmp
+            # Same edge case as above being retained
+            # Trailing 0s can, other than in "00", be discarded
             if not buf == "00":
                 buf = buf.rstrip("0")
         buf_list.append(buf)
